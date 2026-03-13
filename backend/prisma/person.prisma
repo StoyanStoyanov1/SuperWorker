@@ -1,0 +1,11 @@
+model Person {
+  id        String   @id @default(uuid())
+  firstName      String
+  lastName       String
+  otherName    String?
+  phoneNumber    String?
+  dateOfBirth   DateTime
+  address_id String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

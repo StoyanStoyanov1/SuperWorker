@@ -2,8 +2,8 @@ export interface Person {
     id: number;
     firstName: string;
     lastName: string;
-    anotherName?: string;
-    phone: string;
+    otherName?: string;
+    phoneNumber: string;
     dateOfBirth: Date;
     address_id: number;
 }
@@ -11,8 +11,8 @@ export interface Person {
 export interface CreatePersonDto {
     firstName: string;
     lastName: string;
-    anotherName?: string;
-    phone: string;
+    otherName?: string;
+    phoneNumber: string;
     dateOfBirth: Date;
     address_id: number;
 }

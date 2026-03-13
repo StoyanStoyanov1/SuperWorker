@@ -12,7 +12,7 @@ export interface User {
     person_id: number;
     isVerified: boolean;
     verifiedAt?: Date;
-    passwordHash: string;
+    password: string;
 }
 
 export interface CreateUserDto {
