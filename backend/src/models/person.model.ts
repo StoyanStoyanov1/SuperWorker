@@ -1,5 +1,3 @@
-import {Address, CreateAddressDto} from "./address.model";
-
 export interface Person {
     id: number;
     firstName: string;
@@ -7,7 +5,7 @@ export interface Person {
     anotherName?: string;
     phone: string;
     dateOfBirth: Date;
-    address: Address;
+    address_id: number;
 }
 
 export interface CreatePersonDto {
@@ -16,5 +14,5 @@ export interface CreatePersonDto {
     anotherName?: string;
     phone: string;
     dateOfBirth: Date;
-    address: CreateAddressDto;
+    address_id: number;
 }
