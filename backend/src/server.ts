@@ -1,14 +1,18 @@
-import express, { Express, Request, Response } from "express";
+import { createApp} from "./app";
 import { env } from "./config/env";
 import { ensureAdminUser } from "./services/bootstrap.service";
 
-const app: Express = express()
+const start = async (): Promise<void> => {
+    try {
+        await ensureAdminUser();
+        const app = createApp();
+        app.listen(env.port, () => {
+            console.log(`Server is running on port ${env.port}`);
+        });
+    } catch (error) {
+        console.error("Failed to start server:", error);
+        process.exit(1);
+    }
+}
 
-app.get("/", (req: Request, res: Response) => {
-    res.send("Hello World!")
-})
-
-app.listen(env.port, () => {
-    await ensureAdminUser();
-    console.log("Server running on port: 3000")
-})
+start();
