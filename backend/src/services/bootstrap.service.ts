@@ -1,5 +1,5 @@
-import { hash} from "bcryptjs";
-import { prisma} from "../lib/prisma";
+import { hash } from "bcryptjs";
+import { prisma } from "../lib/prisma";
 import { env } from "../config/env";
 
 export const ensureAdminUser = async (): Promise<void> => {
@@ -18,9 +18,15 @@ export const ensureAdminUser = async (): Promise<void> => {
             email: env.superAdminEmail,
             password: hashedPassword,
             role: "SUPER_ADMIN",
-            person_id: crypto.randomUUID(),
             isVerified: true,
             verifiedAt: new Date(),
+            person: {
+                create: {
+                    firstName: "Super",
+                    lastName: "Admin",
+                    dateOfBirth: new Date("1990-01-01"),
+                }
+            }
         },
     });
 
