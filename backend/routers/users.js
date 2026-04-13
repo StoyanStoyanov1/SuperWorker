@@ -1,6 +1,7 @@
 import {User} from "../models/index.js";
 import express from "express";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
@@ -61,4 +62,30 @@ router.post("/", async (req, res) => {
         });
     }
 });
+
+router.post('/login', async (req, res) => {
+    try {
+        const user = await User.findOne({ email: req.body.email });
+
+        if (!user) {
+            return res.status(404).send("User does not exist");
+        }
+
+        if (bcrypt.compareSync(req.body.password, user.passwordHash)) {
+            return res.status(400).send("Password is incorrect");
+        }
+
+        const token = jwt.sign(
+            { userId: user.id },
+            'secret',
+            {expiresIn: '1d'},
+        );
+
+        return res.status(200).send({ user: user.email, token });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 export default router;
