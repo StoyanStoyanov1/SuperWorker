@@ -51,8 +51,4 @@ userSchema.set("toJSON", {
     virtuals: true,
 })
 
-export default {
-    User: mongoose.model("User", userSchema),
-    userSchema: userSchema,
-}
-
+export default mongoose.model("User", userSchema);
