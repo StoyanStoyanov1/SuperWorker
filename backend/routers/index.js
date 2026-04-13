@@ -1,4 +1,4 @@
-import ProductRouter from "./product.js";
+import ProductRouter from "./products.js";
 import CategoriesRouter from "./categories.js";
 
 export {
