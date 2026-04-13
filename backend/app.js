@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import {ProductRouter, CategoriesRouter, UserRouter} from "./routers/index.js";
+import {authJwt, errorHandler} from "./helpers/index.js";
+
 dotenv.config();
 
 import express from "express";
@@ -17,6 +19,8 @@ const app = express();
 // middleware
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
+app.use(authJwt());
+app.use(errorHandler);
 
 //Routers
 app.use(`${api}/products`, ProductRouter);
