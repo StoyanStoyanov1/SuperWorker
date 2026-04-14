@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import morgan from "morgan";
-import {ProductRouter, CategoriesRouter, UserRouter} from "./routers/index.js";
+import {ProductRouter, CategoriesRouter, UserRouter, OrderRouter} from "./routers/index.js";
 import {authJwt, errorHandler} from "./helpers/index.js";
 
 dotenv.config();
@@ -26,6 +26,7 @@ app.use(errorHandler);
 app.use(`${api}/products`, ProductRouter);
 app.use(`${api}/categories`, CategoriesRouter);
 app.use(`${api}/users`, UserRouter);
+app.use(`${api}/orders`, OrderRouter);
 
 
 mongoose.connect(connectionString)
