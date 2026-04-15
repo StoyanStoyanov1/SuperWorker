@@ -1,11 +1,12 @@
 import express from 'express';
-import {Order} from "../models/index.js";
+import {Order, OrderItem} from "../models/index.js";
+import orderItem from "../models/orderItem.js";
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
     try {
-        const orderList = await Order.find();
+        const orderList = await Order.find().populate("user", "name").sort({"dateOrdered": -1});
 
         if (orderList.length === 0) {
             return res.status(404).json({success: false, message: "No order found."});
@@ -18,10 +19,42 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.get("/:id", async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id)
+            .populate("user", "name")
+            .populate({ path: "orderItems", populate: {
+                path: "product", populate: "category"
+                }})
+
+        if (!order) {
+            return res.status(404).json({success: false, message: "No order found."});
+        }
+
+        res.status(200).send(order);
+
+    } catch (error) {
+        res.status(500).json({error, message: error.message});
+    }
+});
+
 router.post("/", async (req, res) => {
     try {
+        const orderItemsIds = Promise.all(req.body.orderItems.map(async item => {
+            let newOrderItem = OrderItem({
+                quantity: item.quantity,
+                product: item.product,
+            });
+
+            newOrderItem = await newOrderItem.save();
+
+            return newOrderItem._id;
+        }));
+
+        const orderItemsIdsResolved = await orderItemsIds;
+
         let order = new Order({
-            orderItems: req.body.orderItems,
+            orderItems: orderItemsIdsResolved,
             shippingAddress1: req.body.shippingAddress1,
             shippingAddress2: req.body.shippingAddress2,
             city: req.body.city,
