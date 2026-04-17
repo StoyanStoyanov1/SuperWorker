@@ -14,4 +14,4 @@ yarn-error.log*
 
 # Environment
 .env
-/src/generated/prisma
+/generated/prisma
