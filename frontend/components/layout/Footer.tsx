@@ -21,14 +21,6 @@ export default function Footer() {
                         </ul>
                     </div>
 
-                    <div>
-                        <h3 className="font-semibold text-white mb-3">Account</h3>
-                        <ul className="space-y-2 text-sm text-slate-400">
-                            <li><Link href="/login" className="transition hover:text-white">Sign in</Link></li>
-                            <li><Link href="/register" className="transition hover:text-white">Sign up</Link></li>
-                            <li><Link href="/orders" className="transition hover:text-white">Orders</Link></li>
-                        </ul>
-                    </div>
                 </div>
 
                 <div className="border-t border-slate-800 mt-8 pt-6 text-center text-sm text-slate-500">
