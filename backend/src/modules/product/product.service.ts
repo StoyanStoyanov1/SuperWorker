@@ -20,6 +20,7 @@ export const createProduct = async (dto: CreateProductDto, sellerId: string) => 
         data: {
             name: dto.name,
             description: dto.description,
+            shortDesc: dto.shortDesc,
             price: dto.price,
             currency: dto.currency,
             stock: dto.stock,
@@ -53,6 +54,7 @@ export const updateProduct = async (productId: string, dto: UpdateProductDto, se
         data: {
             name: dto.name,
             description: dto.description,
+            shortDesc: dto.shortDesc,
             price: dto.price,
             stock: dto.stock,
         },

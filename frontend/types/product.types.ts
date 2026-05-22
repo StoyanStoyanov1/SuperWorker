@@ -2,6 +2,7 @@ export interface Product {
     id: string;
     name: string;
     description: string;
+    shortDesc: string;
     price: number;
     stock: number;
     currency: string;
@@ -29,6 +30,7 @@ export interface ProductCategory {
 
 export interface CreateProductDto {
     name: string;
+    shortDesc: string;
     description: string;
     price: number;
     stock: number;
