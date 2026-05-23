@@ -54,10 +54,14 @@ export default function PriceField<T extends FieldValues>({
                                 min="0"
                                 placeholder="0.00"
                                 onKeyDown={(e) => {
-                                    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-                                        e.preventDefault();
-                                    }
-                                }}
+                                if (
+                                    e.key === "ArrowUp" ||
+                                    e.key === "ArrowDown" ||
+                                    (e.key.length === 1 && !/[\d.]/.test(e.key) && !e.ctrlKey && !e.metaKey)
+                                ) {
+                                    e.preventDefault();
+                                }
+                            }}
                                 onWheel={(e) => e.currentTarget.blur()}
                                 onBlur={(e) => {
                                     const value = parseFloat(e.target.value);

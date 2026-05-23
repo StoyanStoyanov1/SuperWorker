@@ -2,7 +2,7 @@ import {z} from 'zod';
 
 export const CreateProductSchema = z.object({
     name: z.string().min(2).max(100),
-    description: z.string().min(2).max(1000),
+    description: z.string().min(200).max(5000),
     shortDesc: z.string().min(2).max(255),
     price: z.number().positive(),
     stock: z.number().int().nonnegative(),

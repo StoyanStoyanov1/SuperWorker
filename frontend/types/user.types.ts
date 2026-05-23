@@ -1,8 +1,13 @@
+export interface UserRole {
+    id: string;
+    name: "ADMIN" | "CUSTOMER" | "SELLER" | "MODERATOR";
+}
+
 export interface User {
     id: string;
     email: string;
     firstName: string;
     lastName: string;
-    role: "ADMIN" | "CUSTOMER" | "SELLER" | "MODERATOR";
+    role: UserRole;
     isAktiv: boolean;
 }
