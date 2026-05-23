@@ -35,15 +35,17 @@ export default function ProductDetail({ product, onAddToCart, isPending }: Produ
     };  
 
     return (
-        <div className="grid gap-10 lg:grid-cols-[420px_minmax(0,1fr)]">
-            <div className="rounded-[2rem] border border-border bg-white p-6 shadow-sm">
+        <div className="grid gap-10 lg:grid-cols-[420px_minmax(0,1fr)] items-start">
+            <div className="sticky top-24 rounded-[2rem] border border-border bg-white p-6 shadow-sm">
                 <ProductImages images={product.images} name={product.name} />
             </div>
 
             <div className="space-y-6 rounded-[2rem] border border-border bg-white p-8 shadow-sm">
-                <div className="space-y-4">
+                <div className="space-y-2">
                     <h1 className="text-3xl font-semibold text-slate-950">{product.name}</h1>
-                    <p className="text-base leading-7 text-slate-600">{product.description}</p>
+                    {product.shortDesc && (
+                        <p className="text-base font-medium text-slate-500">{product.shortDesc}</p>
+                    )}
                 </div>
 
                 {product.categories?.length > 0 && (
@@ -59,42 +61,48 @@ export default function ProductDetail({ product, onAddToCart, isPending }: Produ
                     </div>
                 )}
 
-                <div className="flex items-center justify-between gap-4">
-                    <p className="text-3xl font-bold text-slate-950">{currency}{Number(product.price).toFixed(2)}</p>
-                    <p className={`text-sm font-medium ${product.stock > 0 ? "text-emerald-600" : "text-red-500"}`}>
-                        {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
-                    </p>
+                <div className="border-t border-b py-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                        <span className="text-sm text-slate-500">Price</span>
+                        <p className="text-2xl font-bold text-slate-950">{currency}{Number(product.price).toFixed(2)}</p>
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <span className="text-sm text-slate-500">Availability</span>
+                        <p className={`text-sm font-medium ${product.stock > 0 ? "text-emerald-600" : "text-red-500"}`}>
+                            {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
+                        </p>
+                    </div>
                 </div>
 
+                <p className="text-base leading-7 text-slate-600">{product.description}</p>
+
                 {product.stock > 0 && (
-                    <div className="grid gap-4 sm:grid-cols-[auto_minmax(0,1fr)] items-center">
-                        <div className="flex items-center gap-3 rounded-3xl border border-border bg-slate-50 p-2">
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={decrement}
-                                disabled={quantity <= 1}
-                                className="cursor-pointer"
-                            >
-                                <Minus className="h-4 w-4" />
-                            </Button>
-                            <input
-                                type="number"
-                                value={quantity}
-                                onChange={handleQuantityChange}
-                                className="no-spinner appearance-none w-20 rounded-2xl border border-border bg-white px-3 py-2 text-center text-sm text-slate-950 outline-none"
-                            />
-                            <Button
-                                variant="outline"
-                                size="icon"
-                                onClick={increment}
-                                disabled={quantity >= product.stock}
-                                className="cursor-pointer"
-                            >
-                                <Plus className="h-4 w-4" />
-                            </Button>
-                        </div>
-                        <p className="text-sm text-slate-500">Max quantity: {product.stock}</p>
+                    <div className="flex items-center gap-3">
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={decrement}
+                            disabled={quantity <= 1}
+                            className="cursor-pointer"
+                        >
+                            <Minus className="h-4 w-4" />
+                        </Button>
+                        <input
+                            type="number"
+                            value={quantity}
+                            onChange={handleQuantityChange}
+                            className="w-16 text-center border rounded-lg py-1.5 text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            onClick={increment}
+                            disabled={quantity >= product.stock}
+                            className="cursor-pointer"
+                        >
+                            <Plus className="h-4 w-4" />
+                        </Button>
+                        <span className="text-sm text-muted-foreground">Max: {product.stock}</span>
                     </div>
                 )}
 

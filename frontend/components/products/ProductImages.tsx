@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { ProductImage } from "@/types";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
 interface ProductImagesProps {
     images: ProductImage[];
@@ -12,18 +14,29 @@ interface ProductImagesProps {
 export default function ProductImages({ images, name }: ProductImagesProps) {
     const primaryImage = images?.find(img => img.isPrimary) || images?.[0];
     const [selected, setSelected] = useState(primaryImage?.url || null);
+    const [lightboxOpen, setLightboxOpen] = useState(false);
+    const [lightboxIndex, setLightboxIndex] = useState(0);
 
     if (!images || images.length === 0) {
         return (
-            <div className="aspect-square rounded-[2rem] bg-slate-100 flex items-center justify-center shadow-sm">
-                <span className="text-slate-400">No image</span>
+            <div className="aspect-square bg-gray-100 rounded-xl flex items-center justify-center">
+                <span className="text-gray-400">No image</span>
             </div>
         );
     }
 
+    const slides = images.map(img => ({ src: img.url }));
+
     return (
-        <div className="space-y-4">
-            <div className="relative aspect-square overflow-hidden rounded-[2rem] bg-slate-100 shadow-sm">
+        <div className="space-y-3">
+            <div
+                className="aspect-square bg-gray-100 rounded-xl overflow-hidden relative cursor-zoom-in"
+                onClick={() => {
+                    const index = images.findIndex(img => img.url === selected);
+                    setLightboxIndex(index >= 0 ? index : 0);
+                    setLightboxOpen(true);
+                }}
+            >
                 {selected && (
                     <Image
                         src={selected}
@@ -35,15 +48,15 @@ export default function ProductImages({ images, name }: ProductImagesProps) {
             </div>
 
             {images.length > 1 && (
-                <div className="flex gap-3 overflow-x-auto pb-1">
+                <div className="flex gap-2 overflow-x-auto pb-1">
                     {images.map((img) => (
                         <button
                             key={img.id}
                             onClick={() => setSelected(img.url)}
-                            className={`relative h-20 w-20 shrink-0 overflow-hidden rounded-3xl border transition duration-300 ${
+                            className={`relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden border-2 transition cursor-pointer ${
                                 selected === img.url
-                                    ? "border-primary ring-2 ring-primary/20"
-                                    : "border-border hover:border-slate-400"
+                                    ? "border-gray-900"
+                                    : "border-transparent"
                             }`}
                         >
                             <Image
@@ -56,6 +69,13 @@ export default function ProductImages({ images, name }: ProductImagesProps) {
                     ))}
                 </div>
             )}
+
+            <Lightbox
+                open={lightboxOpen}
+                close={() => setLightboxOpen(false)}
+                slides={slides}
+                index={lightboxIndex}
+            />
         </div>
     );
 }
