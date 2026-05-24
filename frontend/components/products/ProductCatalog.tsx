@@ -1,8 +1,8 @@
 import ProductCard from "@/components/products/ProductCart";
-import { Product } from "@/types";
+import { PaginatedResponse, Product } from "@/types";
 
 
-function productCatalaog(data: Product) {
+function productCatalaog(data: PaginatedResponse<Product>) {
 return (
         <div className="max-w-6xl mx-auto px-4 py-8">
             <div className="mb-8 rounded-[32px] border border-border bg-white p-8 shadow-sm">

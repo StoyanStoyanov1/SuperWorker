@@ -34,7 +34,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                             {currency}{Number(product.price).toFixed(2)}
                         </span>
                     </div>
-                    <p className="text-sm leading-6 text-slate-600 line-clamp-2">{product.description}</p>
+                    <p className="text-sm leading-6 text-slate-600 line-clamp-2">{product.shortDesc}</p>
                 </div>
             </div>
         </Link>

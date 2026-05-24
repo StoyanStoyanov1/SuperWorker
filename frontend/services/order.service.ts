@@ -21,4 +21,9 @@ export const orderService = {
         const { data } = await api.post(ENDPOINTS.orders, { addressId });
         return data;
     },
+
+    async createPaymentIntent(orderId: string): Promise<{ clientSecret: string }> {
+        const { data } = await api.post("/payments/create-intent", { orderId });
+        return data;
+    },
 };

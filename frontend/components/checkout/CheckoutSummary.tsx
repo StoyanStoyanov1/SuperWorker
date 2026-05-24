@@ -6,6 +6,7 @@ interface CheckoutSummaryProps {
     onConfirm: () => void;
     isSubmitting: boolean;
     selectedAddressId: string | null;
+    readOnly?: boolean;
 }
 
 export default function CheckoutSummary({
@@ -13,6 +14,7 @@ export default function CheckoutSummary({
     onConfirm,
     isSubmitting,
     selectedAddressId,
+    readOnly
 }: CheckoutSummaryProps) {
     const total = cart.cartItems.reduce(
         (sum, item) => sum + Number(item.product.price) * item.quantity,
@@ -39,7 +41,7 @@ export default function CheckoutSummary({
                 <span>Total</span>
                 <span>{total.toFixed(2)}</span>
             </div>
-
+            {!readOnly && (
             <Button
                 className="w-full cursor-pointer"
                 disabled={isSubmitting || !selectedAddressId}
@@ -47,7 +49,7 @@ export default function CheckoutSummary({
             >
                 {isSubmitting ? "Placing order..." : "Place order"}
             </Button>
-
+            )}
             {!selectedAddressId && (
                 <p className="text-xs text-red-500 text-center">
                     Please select a delivery address

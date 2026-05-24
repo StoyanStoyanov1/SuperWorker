@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dialog";
 import LoginForm from "@/components/auth/LoginForm";
 import RegisterForm from "@/components/auth/RegisterForm";
-import Link from "next/link";
 
 interface AuthModalProps {
     open: boolean;
