@@ -79,105 +79,85 @@ async function main() {
         console.log("Cities created!");
     }
 
-}
+    const categories = [
+        { name: "Electronics", parentName: null },
+        { name: "Smartphones", parentName: "Electronics" },
+        { name: "Laptops", parentName: "Electronics" },
+        { name: "Tablets", parentName: "Electronics" },
+        { name: "TVs & Monitors", parentName: "Electronics" },
+        { name: "Audio & Headphones", parentName: "Electronics" },
+        { name: "Cameras", parentName: "Electronics" },
+        { name: "Gaming", parentName: "Electronics" },
+        { name: "Clothing & Fashion", parentName: null },
+        { name: "Men's Clothing", parentName: "Clothing & Fashion" },
+        { name: "Women's Clothing", parentName: "Clothing & Fashion" },
+        { name: "Kids' Clothing", parentName: "Clothing & Fashion" },
+        { name: "Shoes", parentName: "Clothing & Fashion" },
+        { name: "Bags & Accessories", parentName: "Clothing & Fashion" },
+        { name: "Home & Garden", parentName: null },
+        { name: "Furniture", parentName: "Home & Garden" },
+        { name: "Kitchen & Dining", parentName: "Home & Garden" },
+        { name: "Bedding & Bath", parentName: "Home & Garden" },
+        { name: "Garden & Outdoor", parentName: "Home & Garden" },
+        { name: "Home Decor", parentName: "Home & Garden" },
+        { name: "Sports & Outdoors", parentName: null },
+        { name: "Fitness Equipment", parentName: "Sports & Outdoors" },
+        { name: "Cycling", parentName: "Sports & Outdoors" },
+        { name: "Running", parentName: "Sports & Outdoors" },
+        { name: "Team Sports", parentName: "Sports & Outdoors" },
+        { name: "Outdoor & Camping", parentName: "Sports & Outdoors" },
+        { name: "Books & Media", parentName: null },
+        { name: "Books", parentName: "Books & Media" },
+        { name: "Music", parentName: "Books & Media" },
+        { name: "Movies & TV", parentName: "Books & Media" },
+        { name: "Video Games", parentName: "Books & Media" },
+        { name: "Health & Beauty", parentName: null },
+        { name: "Skincare", parentName: "Health & Beauty" },
+        { name: "Haircare", parentName: "Health & Beauty" },
+        { name: "Vitamins & Supplements", parentName: "Health & Beauty" },
+        { name: "Makeup", parentName: "Health & Beauty" },
+        { name: "Personal Care", parentName: "Health & Beauty" },
+        { name: "Toys & Games", parentName: null },
+        { name: "Action Figures", parentName: "Toys & Games" },
+        { name: "Board Games", parentName: "Toys & Games" },
+        { name: "Puzzles", parentName: "Toys & Games" },
+        { name: "Baby & Toddler", parentName: "Toys & Games" },
+        { name: "Food & Beverages", parentName: null },
+        { name: "Coffee & Tea", parentName: "Food & Beverages" },
+        { name: "Snacks", parentName: "Food & Beverages" },
+        { name: "Organic & Natural", parentName: "Food & Beverages" },
+        { name: "Automotive", parentName: null },
+        { name: "Car Accessories", parentName: "Automotive" },
+        { name: "Car Electronics", parentName: "Automotive" },
+        { name: "Tools & Equipment", parentName: "Automotive" },
+        { name: "Jewelry & Accessories", parentName: null },
+        { name: "Necklaces", parentName: "Jewelry & Accessories" },
+        { name: "Rings", parentName: "Jewelry & Accessories" },
+        { name: "Bracelets", parentName: "Jewelry & Accessories" },
+        { name: "Watches", parentName: "Jewelry & Accessories" },
+    ];
 
-const categories = [
-    // Electronics
-    { name: "Electronics", parentName: null },
-    { name: "Smartphones", parentName: "Electronics" },
-    { name: "Laptops", parentName: "Electronics" },
-    { name: "Tablets", parentName: "Electronics" },
-    { name: "TVs & Monitors", parentName: "Electronics" },
-    { name: "Audio & Headphones", parentName: "Electronics" },
-    { name: "Cameras", parentName: "Electronics" },
-    { name: "Gaming", parentName: "Electronics" },
+    const existingCategories = await prisma.category.count();
 
-    // Clothing & Fashion
-    { name: "Clothing & Fashion", parentName: null },
-    { name: "Men's Clothing", parentName: "Clothing & Fashion" },
-    { name: "Women's Clothing", parentName: "Clothing & Fashion" },
-    { name: "Kids' Clothing", parentName: "Clothing & Fashion" },
-    { name: "Shoes", parentName: "Clothing & Fashion" },
-    { name: "Bags & Accessories", parentName: "Clothing & Fashion" },
-
-    // Home & Garden
-    { name: "Home & Garden", parentName: null },
-    { name: "Furniture", parentName: "Home & Garden" },
-    { name: "Kitchen & Dining", parentName: "Home & Garden" },
-    { name: "Bedding & Bath", parentName: "Home & Garden" },
-    { name: "Garden & Outdoor", parentName: "Home & Garden" },
-    { name: "Home Decor", parentName: "Home & Garden" },
-
-    // Sports & Outdoors
-    { name: "Sports & Outdoors", parentName: null },
-    { name: "Fitness Equipment", parentName: "Sports & Outdoors" },
-    { name: "Cycling", parentName: "Sports & Outdoors" },
-    { name: "Running", parentName: "Sports & Outdoors" },
-    { name: "Team Sports", parentName: "Sports & Outdoors" },
-    { name: "Outdoor & Camping", parentName: "Sports & Outdoors" },
-
-    // Books & Media
-    { name: "Books & Media", parentName: null },
-    { name: "Books", parentName: "Books & Media" },
-    { name: "Music", parentName: "Books & Media" },
-    { name: "Movies & TV", parentName: "Books & Media" },
-    { name: "Video Games", parentName: "Books & Media" },
-
-    // Health & Beauty
-    { name: "Health & Beauty", parentName: null },
-    { name: "Skincare", parentName: "Health & Beauty" },
-    { name: "Haircare", parentName: "Health & Beauty" },
-    { name: "Vitamins & Supplements", parentName: "Health & Beauty" },
-    { name: "Makeup", parentName: "Health & Beauty" },
-    { name: "Personal Care", parentName: "Health & Beauty" },
-
-    // Toys & Games
-    { name: "Toys & Games", parentName: null },
-    { name: "Action Figures", parentName: "Toys & Games" },
-    { name: "Board Games", parentName: "Toys & Games" },
-    { name: "Puzzles", parentName: "Toys & Games" },
-    { name: "Baby & Toddler", parentName: "Toys & Games" },
-
-    // Food & Beverages
-    { name: "Food & Beverages", parentName: null },
-    { name: "Coffee & Tea", parentName: "Food & Beverages" },
-    { name: "Snacks", parentName: "Food & Beverages" },
-    { name: "Organic & Natural", parentName: "Food & Beverages" },
-
-    // Automotive
-    { name: "Automotive", parentName: null },
-    { name: "Car Accessories", parentName: "Automotive" },
-    { name: "Car Electronics", parentName: "Automotive" },
-    { name: "Tools & Equipment", parentName: "Automotive" },
-
-    // Jewelry & Accessories
-    { name: "Jewelry & Accessories", parentName: null },
-    { name: "Necklaces", parentName: "Jewelry & Accessories" },
-    { name: "Rings", parentName: "Jewelry & Accessories" },
-    { name: "Bracelets", parentName: "Jewelry & Accessories" },
-    { name: "Watches", parentName: "Jewelry & Accessories" },
-];
-
-const existingCategories = await prisma.category.count();
-
-if (existingCategories === 0) {
-    const parentCategories = categories.filter(c => c.parentName === null);
-    for (const cat of parentCategories) {
-        await prisma.category.create({ data: { name: cat.name } });
-    }
-
-    const subCategories = categories.filter(c => c.parentName !== null);
-    for (const cat of subCategories) {
-        const parent = await prisma.category.findFirst({
-            where: { name: cat.parentName! },
-        });
-        if (parent) {
-            await prisma.category.create({
-                data: { name: cat.name, parentId: parent.id },
-            });
+    if (existingCategories === 0) {
+        const parentCategories = categories.filter(c => c.parentName === null);
+        for (const cat of parentCategories) {
+            await prisma.category.create({ data: { name: cat.name } });
         }
+
+        const subCategories = categories.filter(c => c.parentName !== null);
+        for (const cat of subCategories) {
+            const parent = await prisma.category.findFirst({
+                where: { name: cat.parentName! },
+            });
+            if (parent) {
+                await prisma.category.create({
+                    data: { name: cat.name, parentId: parent.id },
+                });
+            }
+        }
+        console.log("Categories created!");
     }
-    console.log("Categories created!");
 }
 
 main()
