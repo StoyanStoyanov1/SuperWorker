@@ -56,16 +56,28 @@ export default function CheckoutContainer() {
     });
 
     const { mutate: placeOrder, isPending: placingOrder } = useMutation({
-        mutationFn: () => orderService.createOrder(selectedAddressId!),
-        onSuccess: async (order) => {
-            setOrderId(order.id);
-            const { clientSecret } = await orderService.createPaymentIntent(order.id);
-            setClientSecret(clientSecret);
+        mutationFn: (paymentIntentId: string) => orderService.createOrder(selectedAddressId!, paymentIntentId),
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["cart"] });
-            setStep("payment");
+            queryClient.invalidateQueries({ queryKey: ["orders"] });
+            queryClient.invalidateQueries({ queryKey: ["products"] });
+            router.push("/orders");
+            toast.success("Order placed successfully!");
         },
-        onError: () => toast.error("Failed to place order."),
+        onError: () => toast.error("Failed to place order after payment. Please contact support."),
     });
+
+    const handleConfirmAddress = async () => {
+        if (!selectedAddressId) return;
+        
+        try {
+            const { clientSecret } = await orderService.createPaymentIntent();
+            setClientSecret(clientSecret);
+            setStep("payment");
+        } catch (error) {
+            toast.error("Failed to initialize payment.");
+        }
+    };
 
     const handlePaymentSuccess = () => {
         queryClient.invalidateQueries({ queryKey: ["orders"] });
@@ -116,8 +128,8 @@ export default function CheckoutContainer() {
                     {cart && (
                         <CheckoutSummary
                             cart={cart}
-                            onConfirm={() => placeOrder()}
-                            isSubmitting={placingOrder}
+                            onConfirm={handleConfirmAddress}
+                            isSubmitting={false}
                             selectedAddressId={selectedAddressId}
                         />
                     )}
@@ -132,7 +144,7 @@ export default function CheckoutContainer() {
                             stripe={stripePromise}
                             options={{ clientSecret }}
                         >
-                            <PaymentForm onSuccess={handlePaymentSuccess} />
+                            <PaymentForm onSuccess={(pi) => placeOrder(pi)} />
                         </Elements>
                     </div>
 
@@ -140,7 +152,7 @@ export default function CheckoutContainer() {
                         <CheckoutSummary
                             cart={cart}
                             onConfirm={() => {}}
-                            isSubmitting={false}
+                            isSubmitting={placingOrder}
                             selectedAddressId={selectedAddressId}
                             readOnly
                         />

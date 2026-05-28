@@ -17,12 +17,12 @@ export const orderService = {
         const { data } = await api.patch(`${ENDPOINTS.orders}/${id}/cancel`);
         return data;
     },
-    async createOrder(addressId: string): Promise<Order> {
-        const { data } = await api.post(ENDPOINTS.orders, { addressId });
+    async createOrder(addressId: string, paymentIntentId: string): Promise<Order> {
+        const { data } = await api.post(ENDPOINTS.orders, { addressId, paymentIntentId });
         return data;
     },
 
-    async createPaymentIntent(orderId: string): Promise<{ clientSecret: string }> {
+    async createPaymentIntent(orderId?: string): Promise<{ clientSecret: string }> {
         const { data } = await api.post("/payments/create-intent", { orderId });
         return data;
     },

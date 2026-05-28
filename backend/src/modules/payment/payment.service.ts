@@ -25,6 +25,44 @@ export const createPaymentIntent = async (orderId: string, userId: string) => {
     return { clientSecret: paymentIntent.client_secret };
 };
 
+export const createPaymentIntentFromCart = async (userId: string) => {
+    const cart = await prisma.cart.findUnique({
+        where: { userId },
+        include: {
+            cartItems: {
+                include: {
+                    product: true,
+                },
+            },
+        },
+    });
+
+    if (!cart || cart.cartItems.length === 0) {
+        throw new AppError("Cart is empty", 400);
+    }
+
+    const totalAmount = cart.cartItems.reduce(
+        (total, item) => total + Number(item.product.price) * item.quantity,
+        0
+    );
+
+    const paymentIntent = await stripe.paymentIntents.create({
+        amount: Math.round(totalAmount * 100),
+        currency: "eur",
+        metadata: {
+            userId,
+            type: "cart_checkout"
+        },
+    });
+
+    return { clientSecret: paymentIntent.client_secret, amount: totalAmount };
+};
+
+export const verifyPaymentIntent = async (paymentIntentId: string) => {
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    return paymentIntent;
+};
+
 export const handleWebhook = async (payload: Buffer, signature: string) => {
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
@@ -40,20 +78,24 @@ export const handleWebhook = async (payload: Buffer, signature: string) => {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         const orderId = paymentIntent.metadata.orderId;
 
-        await prisma.order.update({
-            where: { id: orderId },
-            data: { status: "CONFIRMED" },
-        });
+        if (orderId) {
+            await prisma.order.update({
+                where: { id: orderId },
+                data: { status: "CONFIRMED" },
+            });
+        }
     }
 
     if (event.type === "payment_intent.payment_failed") {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
         const orderId = paymentIntent.metadata.orderId;
 
-        await prisma.order.update({
-            where: { id: orderId },
-            data: { status: "CANCELLED" },
-        });
+        if (orderId) {
+            await prisma.order.update({
+                where: { id: orderId },
+                data: { status: "CANCELLED" },
+            });
+        }
     }
 
     return { received: true };

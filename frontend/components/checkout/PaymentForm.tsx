@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 
 interface PaymentFormProps {
-    onSuccess: () => void;
+    onSuccess: (paymentIntentId: string) => void;
 }
 
 export default function PaymentForm({ onSuccess }: PaymentFormProps) {
@@ -26,7 +26,7 @@ export default function PaymentForm({ onSuccess }: PaymentFormProps) {
         setIsProcessing(true);
 
         try {
-            const { error } = await stripe.confirmPayment({
+            const { error, paymentIntent } = await stripe.confirmPayment({
                 elements,
                 confirmParams: {
                     return_url: `${window.location.origin}/orders`,
@@ -36,9 +36,11 @@ export default function PaymentForm({ onSuccess }: PaymentFormProps) {
 
             if (error) {
                 toast.error(error.message || "Payment failed");
-            } else {
+            } else if (paymentIntent && paymentIntent.status === "succeeded") {
                 toast.success("Payment successful!");
-                onSuccess();
+                onSuccess(paymentIntent.id);
+            } else {
+                toast.error("Payment status: " + (paymentIntent?.status || "unknown"));
             }
         } finally {
             setIsProcessing(false);

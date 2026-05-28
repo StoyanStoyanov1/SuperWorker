@@ -4,8 +4,20 @@ import {AppError} from "../../shared/errors/AppError.js";
 import type {OrderStatus} from "@prisma/client";
 import { paginate} from "../../shared/pagination/pagination.js";
 import logger from "../../shared/logger/logger.js";
+import { verifyPaymentIntent } from "../payment/payment.service.js";
 
 export const createOrder = async (userId: string, dto: OrderDto) => {
+    // 1. Verify Payment Intent first
+    const paymentIntent = await verifyPaymentIntent(dto.paymentIntentId);
+    
+    if (!paymentIntent || paymentIntent.status !== "succeeded") {
+        throw new AppError("Payment not confirmed. Please pay before placing order.", 400);
+    }
+
+    if (paymentIntent.metadata.userId !== userId) {
+        throw new AppError("Payment session mismatch.", 403);
+    }
+
     const cart = await prisma.cart.findUnique({
         where: { userId },
         include: {
@@ -27,6 +39,11 @@ export const createOrder = async (userId: string, dto: OrderDto) => {
 
     const totalPrice: number = cart.cartItems.reduce((total, item) => total + Number(item.product.price) * item.quantity, 0);
 
+    // 2. Verify amount matches (within 1 cent tolerance for rounding)
+    if (Math.abs(Math.round(totalPrice * 100) - paymentIntent.amount) > 1) {
+        throw new AppError("Payment amount mismatch. Cart might have changed.", 400);
+    }
+
     const createdOrder = await prisma.$transaction(async (tx) => {
 
         for (const item of cart.cartItems) {
@@ -41,7 +58,7 @@ export const createOrder = async (userId: string, dto: OrderDto) => {
                 userId,
                 addressId: dto.addressId,
                 totalPrice,
-                status: "PENDING",
+                status: "CONFIRMED",
                 orderItems: {
                     create: cart.cartItems.map(item => ({
                         productId: item.productId,
