@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Path } from "react-hook-form";
 import { z } from "zod";
 import { authService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
@@ -35,8 +34,24 @@ export default function RegisterForm() {
     const router = useRouter();
     const [authError, setAuthError] = useState<string | null>(null);
 
+    const customResolver = async (values: unknown) => {
+        const result = registerSchema.safeParse(values);
+        if (result.success) {
+            return { values: result.data, errors: {} };
+        }
+        const fieldErrors = result.error.flatten().fieldErrors as Record<string, string[] | undefined>;
+        const errors: Record<string, { type: string; message: string }> = {};
+        Object.keys(fieldErrors).forEach((key) => {
+            const msg = fieldErrors[key]?.[0];
+            if (msg) {
+                errors[key] = { type: "validation", message: msg };
+            }
+        });
+        return { values: {}, errors };
+    };
+
     const form = useForm<RegisterForm>({
-        resolver: zodResolver(registerSchema),
+        resolver: customResolver,
         defaultValues: {
             email: "",
             password: "",
@@ -48,14 +63,30 @@ export default function RegisterForm() {
         mode: "onSubmit",
     });
 
+    const { setFocus, handleSubmit } = form;
+
+    const handleInvalid = (errs: unknown) => {
+        setAuthError(null);
+        if (errs && typeof errs === "object") {
+            const keys = Object.keys(errs as Record<string, unknown>);
+            const first = keys[0];
+            if (first) {
+                try { setFocus(first as unknown as Path<RegisterForm>); } catch {}
+            }
+        }
+    };
+
     const onSubmit = async (data: RegisterForm) => {
         setAuthError(null);
         try {
             await authService.register(data);
             toast.success("Account created! Please verify your email.");
             router.push("/login");
-        } catch (error: any) {
-            if (error.response?.status === 409) {
+        } catch (error: unknown) {
+            const err = error as Record<string, unknown> | null;
+            const response = err && typeof err === "object" ? (err as Record<string, unknown>)['response'] : undefined;
+            const status = response && typeof response === 'object' ? (response as Record<string, unknown>)['status'] : undefined;
+            if (typeof status === 'number' && status === 409) {
                 setAuthError("Email already exists.");
             } else {
                 setAuthError("Something went wrong. Please try again.");
@@ -65,7 +96,7 @@ export default function RegisterForm() {
 
     return (
         <FormWrapper
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit, handleInvalid)}
             buttonLabel="Sign up"
             isSubmitting={form.formState.isSubmitting}
             error={authError}

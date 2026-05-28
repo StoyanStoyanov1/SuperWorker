@@ -10,7 +10,9 @@ import toast from "react-hot-toast";
 
 export default function Navbar() {
     const router = useRouter();
-    const { user, isAuthenticated, logout } = useAuthStore();
+    const user = useAuthStore((state) => state.user);
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const logout = useAuthStore((state) => state.logout);
 
     const handleLogout = async () => {
         try {
@@ -21,7 +23,7 @@ export default function Navbar() {
             router.push("/login");
         }
     };
-    console.log(user);
+    
     return (
         <nav className="sticky top-0 z-50 border-b border-border bg-white/90 backdrop-blur-xl shadow-sm">
             <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-6 px-4">

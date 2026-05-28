@@ -1,7 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Path } from "react-hook-form";
 import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
 import { cityService } from "@/services/city.service";
@@ -26,17 +25,45 @@ export default function AddressForm({ onSubmit, isSubmitting }: AddressFormProps
         queryFn: () => cityService.getCities(),
     });
 
+    const customResolver = async (values: unknown) => {
+        const result = addressSchema.safeParse(values);
+        if (result.success) {
+            return { values: result.data, errors: {} };
+        }
+        const fieldErrors = result.error.flatten().fieldErrors as Record<string, string[] | undefined>;
+        const errors: Record<string, { type: string; message: string }> = {};
+        Object.keys(fieldErrors).forEach((key) => {
+            const msg = fieldErrors[key]?.[0];
+            if (msg) {
+                errors[key] = { type: "validation", message: msg };
+            }
+        });
+        return { values: {}, errors };
+    };
+
     const form = useForm<AddressForm>({
-        resolver: zodResolver(addressSchema),
+        resolver: customResolver,
         defaultValues: {
             street: "",
             cityId: "",
         },
     });
 
+    const { setFocus, handleSubmit } = form;
+
+    const handleInvalid = (errs: unknown) => {
+        if (errs && typeof errs === "object") {
+            const keys = Object.keys(errs as Record<string, unknown>);
+            const first = keys[0];
+            if (first) {
+                try { setFocus(first as unknown as Path<AddressForm>); } catch {}
+            }
+        }
+    };
+
     return (
         <FormWrapper
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit, handleInvalid)}
             buttonLabel="Use this address"
             isSubmitting={isSubmitting}
             className="space-y-4"

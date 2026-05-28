@@ -7,7 +7,9 @@ import CreateProductForm from "@/components/products/CreateProductForm";
 
 export default function CreateProductPage() {
     const router = useRouter();
-    const { user, isAuthenticated, isHydrated} = useAuthStore();
+    const user = useAuthStore((state) => state.user);
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const isHydrated = useAuthStore((state) => state.isHydrated);
 
     useEffect(() => {
         if (!isHydrated) return;        

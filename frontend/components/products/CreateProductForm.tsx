@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Path } from "react-hook-form";
 import { z } from "zod";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -40,8 +39,24 @@ export default function CreateProductForm() {
         queryFn: () => categoryService.getAll(),
     });
 
+    const customResolver = async (values: unknown) => {
+        const result = createProductSchema.safeParse(values);
+        if (result.success) {
+            return { values: result.data, errors: {} };
+        }
+        const fieldErrors = result.error.flatten().fieldErrors as Record<string, string[] | undefined>;
+        const errors: Record<string, { type: string; message: string }> = {};
+        Object.keys(fieldErrors).forEach((key) => {
+            const msg = fieldErrors[key]?.[0];
+            if (msg) {
+                errors[key] = { type: "validation", message: msg };
+            }
+        });
+        return { values: {}, errors };
+    };
+
     const form = useForm<CreateProductForm>({
-        resolver: zodResolver(createProductSchema),
+        resolver: customResolver,
        defaultValues: {
         name: "",
         description: "",
@@ -52,6 +67,8 @@ export default function CreateProductForm() {
         categoryIds: [],
     },
     });
+
+    const { setFocus, handleSubmit } = form;
 
     const { mutate: createProduct, isPending } = useMutation({
         mutationFn: async (data: CreateProductForm) => {
@@ -111,10 +128,9 @@ export default function CreateProductForm() {
     const onSubmit = (data: CreateProductForm) => {
         createProduct(data);
     };
-    console.log(categories)
     return (
         <FormWrapper
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(onSubmit)}
             buttonLabel="Create Product"
             isSubmitting={isPending}
             className="space-y-6"

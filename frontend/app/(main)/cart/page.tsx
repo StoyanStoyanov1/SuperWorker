@@ -14,7 +14,8 @@ import toast from "react-hot-toast";
 
 export default function CartPage() {
     const router = useRouter();
-    const { isAuthenticated, isHydrated } = useAuthStore();
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const isHydrated = useAuthStore((state) => state.isHydrated);
     const queryClient = useQueryClient();
 
     useEffect(() => {

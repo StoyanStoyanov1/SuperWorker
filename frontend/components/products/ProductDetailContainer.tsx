@@ -17,7 +17,7 @@ import Link from "next/link";
 export default function ProductDetailContainer() {
     const { id } = useParams<{ id: string }>();
     const queryClient = useQueryClient();
-    const { isAuthenticated } = useAuthStore();
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const [authModalOpen, setAuthModalOpen] = useState(false);
     const [pendingQuantity, setPendingQuantity] = useState(1);
 
