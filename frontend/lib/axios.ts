@@ -16,12 +16,23 @@ api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
+        const requestUrl = originalRequest?.url ?? "";
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        const isAuthRequest =
+            requestUrl.includes("/auth/login") ||
+            requestUrl.includes("/auth/register") ||
+            requestUrl.includes("/auth/refresh");
+
+        if (error.response?.status === 401 && !originalRequest._retry && !isAuthRequest) {
             originalRequest._retry = true;
 
             try {
                 const refreshToken = localStorage.getItem("refreshToken");
+
+                if (!refreshToken) {
+                    throw new Error("No refresh token");
+                }
+
                 const { data } = await axios.post(
                     `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`,
                     { refreshToken }
@@ -35,7 +46,10 @@ api.interceptors.response.use(
             } catch {
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("refreshToken");
-                window.location.href = "/login";
+
+                if (window.location.pathname !== "/login") {
+                    window.location.href = "/login";
+                }
             }
         }
 
