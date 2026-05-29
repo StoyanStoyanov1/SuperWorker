@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import useAuthStore from "@/store/authStore";
 import { authService } from "@/services/auth.service";
 import toast from "react-hot-toast";
+import SearchBar from "./SearchBar";
 
 export default function Navbar() {
     const router = useRouter();
@@ -41,6 +42,8 @@ export default function Navbar() {
                         </Link>
                     )}
                 </div>
+
+                <SearchBar />
 
                 <div className="flex items-center gap-3">
                     {isAuthenticated ? (
