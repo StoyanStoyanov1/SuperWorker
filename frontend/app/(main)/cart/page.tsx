@@ -37,6 +37,17 @@ export default function CartPage() {
         },
     });
 
+    const { mutate: updateItem } = useMutation({
+        mutationFn: ({ itemId, quantity }: { itemId: string; quantity: number }) =>
+            cartService.updateItem(itemId, quantity),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["cart"] });
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message || "Failed to update quantity");
+        },
+    });
+
     const { mutate: clearCart } = useMutation({
         mutationFn: () => cartService.clearCart(),
         onSuccess: () => {
@@ -85,7 +96,11 @@ export default function CartPage() {
                 <h1 className="text-3xl font-semibold text-slate-950">Your cart</h1>
                 <p className="mt-2 text-sm text-slate-600">Review your selected items before checkout.</p>
             </div>
-            <CartList items={items} onRemove={(id) => removeItem(id)} />
+            <CartList 
+                items={items} 
+                onRemove={(id) => removeItem(id)} 
+                onUpdate={(id, q) => updateItem({ itemId: id, quantity: q })}
+            />
             <CartSummary total={total} onClear={() => clearCart()} />
         </div>
     );

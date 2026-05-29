@@ -160,7 +160,7 @@ export const cancelOrder = async (userId: string, orderId: string) => {
 
     if (!order) throw new AppError("Order not found", 404);
     if (order.userId !== userId) throw new AppError("Forbidden", 403);
-    if (order.status !== "PENDING") throw new AppError("Only pending orders can be cancelled", 400);
+    if (order.status !== "PENDING" && order.status !== "CONFIRMED") throw new AppError("This order cannot be cancelled", 400);
 
     return prisma.$transaction(async (tx) => {
         for (const item of order.orderItems) {

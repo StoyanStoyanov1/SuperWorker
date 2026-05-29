@@ -7,9 +7,10 @@ import { CartItem as CartItemType } from "@/types";
 interface CartItemProps {
     item: CartItemType;
     onRemove: (itemId: string) => void;
+    onUpdate: (itemId: string, quantity: number) => void;
 }
 
-export default function CartItem({ item, onRemove }: CartItemProps) {
+export default function CartItem({ item, onRemove, onUpdate }: CartItemProps) {
     const primaryImage = item.product.images?.find(img => img.isPrimary)?.url;
     const currency = item.product.currency === "USD" ? "$" : "€";
     return (
@@ -30,8 +31,29 @@ export default function CartItem({ item, onRemove }: CartItemProps) {
                         <h3 className="text-base font-semibold text-slate-950 hover:underline">{item.product.name}</h3>
                     </Link>
                     <p className="text-sm text-slate-500 mt-1">
-                        {currency}{Number(item.product.price).toFixed(2)} × {item.quantity}
+                        {currency}{Number(item.product.price).toFixed(2)}
                     </p>
+                    <div className="flex items-center gap-2 mt-2">
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 rounded-full"
+                            onClick={() => onUpdate(item.id, Math.max(1, item.quantity - 1))}
+                            disabled={item.quantity <= 1}
+                        >
+                            -
+                        </Button>
+                        <span className="text-sm font-medium w-8 text-center">{item.quantity}</span>
+                        <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 rounded-full"
+                            onClick={() => onUpdate(item.id, item.quantity + 1)}
+                            disabled={item.quantity >= item.product.stock}
+                        >
+                            +
+                        </Button>
+                    </div>
                 </div>
             </div>
 
