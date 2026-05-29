@@ -35,7 +35,7 @@
  *                 example: Georgiev
  *               phoneNumber:
  *                 type: string
- *                 example: +359888123456
+ *                 example: +12025550123
  *     responses:
  *       200:
  *         description: Profile updated
@@ -80,7 +80,7 @@
  *             properties:
  *               street:
  *                 type: string
- *                 example: ул. Витоша 1
+ *                 example: 1 Vitosha blvd.
  *               cityId:
  *                 type: string
  *                 example: d6e0a4bd-3756-4b91-80d8-49fba774d669
@@ -115,7 +115,7 @@
  *             properties:
  *               street:
  *                 type: string
- *                 example: ул. Витоша 5
+ *                 example: 5 Vitosha blvd.
  *               cityId:
  *                 type: string
  *                 example: d6e0a4bd-3756-4b91-80d8-49fba774d669

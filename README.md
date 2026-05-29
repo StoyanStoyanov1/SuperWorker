@@ -1,64 +1,64 @@
 # SuperWorker - Modern E-Commerce Platform
 
-Това е пълнофункционална модерна платформа за електронна търговия, изградена с **Node.js/Express** за бекенда и **Next.js** за фронтенда. Проектът включва йерархични категории, разширено филтриране на продукти, интеграция на плащания със Stripe, управление на количка и административен панел.
+This is a full-featured modern e-commerce platform built with **Node.js/Express** for the backend and **Next.js** for the frontend. The project includes hierarchical categories, advanced product filtering, Stripe payment integration, cart management, and an admin panel.
 
-## 🚀 Технологичен стек
+## 🚀 Tech Stack
 
-### Бекенд (Backend)
-- **Node.js & Express** - Сървърна среда и рамка за приложения.
-- **TypeScript** - Статична типизация за по-безопасен код.
-- **Prisma ORM** - Работа с базата данни (PostgreSQL/MySQL).
-- **Redis** - Кеширане на данни за по-висока производителност.
-- **Stripe API** - Обработка на сигурни плащания.
-- **Zod** - Валидация на данни.
-- **Mailtrap** - Симулация на изпращане на имейли.
-- **Vitest** - Тестване.
+### Backend
+- **Node.js & Express** - Server environment and application framework.
+- **TypeScript** - Static typing for safer code.
+- **Prisma ORM** - Database management (PostgreSQL/MySQL).
+- **Redis** - Data caching for higher performance.
+- **Stripe API** - Secure payment processing.
+- **Zod** - Data validation.
+- **Mailtrap** - Email sending simulation.
+- **Vitest** - Testing.
 
-### Фронтенд (Frontend)
-- **Next.js 15 (App Router)** - React рамка за модерен уеб.
-- **TanStack Query (React Query)** - Управление на състоянието на сървъра и кеширане.
-- **Zustand** - Лек мениджър на локално състояние.
-- **Tailwind CSS & Shadcn/UI** - Модерен и адаптивен дизайн.
-- **React Hook Form & Zod** - Управление и валидация на форми.
-- **Lucide React** - Комплект икони.
-
----
-
-## ✨ Основни функционалности
-
-- **Автентикация и оторизация:** Регистрация, вход, защитени пътища и роли (Потребител/Админ).
-- **Каталог с продукти:**
-  - Търсене в реално време.
-  - Йерархично филтриране по категории.
-  - Филтриране по цена и наличност.
-  - Сортиране по цена и дата.
-- **Количка (Cart):** Добавяне, премахване и промяна на количество с автоматична синхронизация и проверка на наличностите.
-- **Плащания:** Интеграция със **Stripe** за сигурен Checkout процес.
-- **Административен панел:** Управление на йерархията на категориите (CRUD операции).
-- **Управление на наличности:** Автоматично намаляване на количествата при поръчка и възстановяване при анулиране.
-- **Кеширане:** Оптимизирана скорост чрез Redis.
+### Frontend
+- **Next.js 15 (App Router)** - React framework for the modern web.
+- **TanStack Query (React Query)** - Server state management and caching.
+- **Zustand** - Lightweight local state management.
+- **Tailwind CSS & Shadcn/UI** - Modern and responsive design.
+- **React Hook Form & Zod** - Form management and validation.
+- **Lucide React** - Icon set.
 
 ---
 
-## 🛠️ Инсталация и настройка
+## ✨ Key Features
 
-### Първоначални стъпки
-1. Клонирайте хранилището:
+- **Authentication & Authorization:** Registration, login, protected routes, and roles (User/Admin).
+- **Product Catalog:**
+  - Real-time search.
+  - Hierarchical filtering by categories.
+  - Filtering by price and availability.
+  - Sorting by price and date.
+- **Cart:** Add, remove, and change quantity with automatic synchronization and stock check.
+- **Payments:** **Stripe** integration for a secure checkout process.
+- **Admin Panel:** Category hierarchy management (CRUD operations).
+- **Stock Management:** Automatic stock reduction on order and restoration on cancellation.
+- **Caching:** Optimized speed through Redis.
+
+---
+
+## 🛠️ Installation and Setup
+
+### Initial Steps
+1. Clone the repository:
    ```bash
    git clone <repository-url>
    cd E-Commerce-NodeJS-
    ```
 
-### Бекенд настройка
-1. Отидете в папката на бекенда:
+### Backend Setup
+1. Go to the backend folder:
    ```bash
    cd backend
    ```
-2. Инсталирайте зависимостите:
+2. Install dependencies:
    ```bash
    npm install
    ```
-3. Създайте `.env` файл по образеца:
+3. Create a `.env` file based on the template:
    ```env
    PORT=3000
    DATABASE_URL="postgresql://user:password@localhost:5432/db_name"
@@ -70,61 +70,61 @@
    STRIPE_SECRET_KEY="sk_test_..."
    STRIPE_WEBHOOK_SECRET="whsec_..."
    ```
-4. Стартирайте Prisma миграциите и сийдването:
+4. Run Prisma migrations and seeding:
    ```bash
    npx prisma migrate dev
    npx prisma db seed
    ```
-5. Стартирайте сървъра:
+5. Start the server:
    ```bash
    npm run dev
    ```
 
-### Фронтенд настройка
-1. Отидете в папката на фронтенда:
+### Frontend Setup
+1. Go to the frontend folder:
    ```bash
    cd ../frontend
    ```
-2. Инсталирайте зависимостите:
+2. Install dependencies:
    ```bash
    npm install
    ```
-3. Създайте `.env.local` файл:
+3. Create a `.env.local` file:
    ```env
    NEXT_PUBLIC_API_URL="http://localhost:3000"
    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
    ```
-4. Стартирайте приложението:
+4. Start the application:
    ```bash
    npm run dev
    ```
 
 ---
 
-## 📂 Структура на проекта
+## 📂 Project Structure
 
 ```text
 ├── backend/
-│   ├── prisma/             # Схема и миграции на БД
+│   ├── prisma/             # DB schema and migrations
 │   ├── src/
-│   │   ├── modules/        # Модулна бизнес логика (Auth, Order, Product, etc.)
-│   │   ├── shared/         # Споделени услуги (Cache, Email, Logger)
+│   │   ├── modules/        # Modular business logic (Auth, Order, Product, etc.)
+│   │   ├── shared/         # Shared services (Cache, Email, Logger)
 │   │   ├── middleware/     # Auth, Error handling, Rate limiting
-│   │   └── config/         # Конфигурационни файлове
-│   └── tests/              # Тестове
+│   │   └── config/         # Configuration files
+│   └── tests/              # Tests
 ├── frontend/
 │   ├── app/                # Next.js App Router (Pages & Layouts)
-│   ├── components/         # UI компоненти
-│   ├── services/           # API комуникация
-│   ├── store/              # Zustand стейт мениджмънт
-│   └── types/              # TypeScript дефиниции
+│   ├── components/         # UI components
+│   ├── services/           # API communication
+│   ├── store/              # Zustand state management
+│   └── types/              # TypeScript definitions
 └── README.md
 ```
 
 ---
 
-## 🧪 Тестване
-За изпълнение на тестовете в бекенда:
+## 🧪 Testing
+To run tests in the backend:
 ```bash
 cd backend
 npm test
@@ -132,5 +132,5 @@ npm test
 
 ---
 
-## 📝 Лиценз
-Този проект е с отворен код и се разпространява под **ISC** лиценз.
+## 📝 License
+This project is open-source and distributed under the **ISC** license.

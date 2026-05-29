@@ -71,7 +71,7 @@ export default function AddressForm({ onSubmit, isSubmitting }: AddressFormProps
             <FormField
                 name="street"
                 label="Street"
-                placeholder="ул. Витоша 10"
+                placeholder="10 Vitosha blvd."
                 control={form.control}
             />
 

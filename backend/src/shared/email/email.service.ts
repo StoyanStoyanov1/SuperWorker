@@ -15,7 +15,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
     const verificationUrl = `http://localhost:3000/auth/verify-email?token=${token}`;
 
     await transporter.sendMail({
-        from: "E-Commerce „<noreply@e-commerce.com>",
+        from: "E-Commerce <noreply@e-commerce.com>",
         to: email,
         subject: "Verification email",
         html: `

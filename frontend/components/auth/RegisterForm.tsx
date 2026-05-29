@@ -140,7 +140,7 @@ export default function RegisterForm() {
            <PhoneField
                 name="phoneNumber"
                 label="Phone number"
-                placeholder="+359888123456"
+                placeholder="+1234567890"
                 control={form.control}
             />
 
