@@ -9,6 +9,8 @@ export interface ProductFilters {
     categoryId?: string;
     minPrice?: number;
     maxPrice?: number;
+    sortBy?: "price" | "createdAt";
+    sortOrder?: "asc" | "desc";
 }
 
 export const productService = {
@@ -20,6 +22,8 @@ export const productService = {
         if (filters.categoryId) params.append("categoryId", filters.categoryId);
         if (filters.minPrice) params.append("minPrice", String(filters.minPrice));
         if (filters.maxPrice) params.append("maxPrice", String(filters.maxPrice));
+        if (filters.sortBy) params.append("sortBy", filters.sortBy);
+        if (filters.sortOrder) params.append("sortOrder", filters.sortOrder);
 
         const { data } = await api.get(`${ENDPOINTS.products}?${params.toString()}`);
         return data;

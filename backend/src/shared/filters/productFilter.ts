@@ -17,8 +17,8 @@ export function productFilter(filters: ProductFiltersDto ) {
 
     if (filters.minPrice || filters.maxPrice) {
         where.price = {};
-        if (filters.minPrice) where.price.gte = filters.minPrice;
-        if (filters.maxPrice) where.price.lte = filters.maxPrice;
+        if (filters.minPrice !== undefined && filters.minPrice !== null) where.price.gte = filters.minPrice;
+        if (filters.maxPrice !== undefined && filters.maxPrice !== null) where.price.lte = filters.maxPrice;
     }
 
     if (filters.inStock) where.stock = {gt: 0};

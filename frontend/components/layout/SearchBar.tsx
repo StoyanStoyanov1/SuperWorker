@@ -10,18 +10,35 @@ export default function SearchBar() {
     const [query, setQuery] = useState(searchParams.get("search") || "");
 
     useEffect(() => {
-        setQuery(searchParams.get("search") || "");
-    }, [searchParams]);
+        const updateQueryFromUrl = () => {
+            const params = new URLSearchParams(window.location.search);
+            setQuery(params.get("search") || "");
+        };
+
+        window.addEventListener("popstate", updateQueryFromUrl);
+        return () => window.removeEventListener("popstate", updateQueryFromUrl);
+    }, []);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         const trimmedQuery = query.trim();
+        const params = new URLSearchParams(window.location.search);
         
         if (trimmedQuery) {
-            router.push(`/products?search=${encodeURIComponent(trimmedQuery)}`);
+            params.set("search", trimmedQuery);
         } else {
-            router.push("/products");
+            params.delete("search");
         }
+        
+        // If we are not on the products page, we still need to navigate
+        if (window.location.pathname !== "/products") {
+            router.push(`/products?${params.toString()}`);
+            return;
+        }
+
+        const newUrl = `/products?${params.toString()}`;
+        window.history.pushState(null, "", newUrl);
+        window.dispatchEvent(new PopStateEvent('popstate'));
     };
 
     return (
