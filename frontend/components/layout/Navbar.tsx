@@ -37,9 +37,16 @@ export default function Navbar() {
                         Products
                     </Link>
                     {isAuthenticated && (
-                        <Link href="/orders" className="text-sm font-medium text-slate-600 transition hover:text-slate-950">
-                            Orders
-                        </Link>
+                        <>
+                            <Link href="/orders" className="text-sm font-medium text-slate-600 transition hover:text-slate-950">
+                                Orders
+                            </Link>
+                            {user?.role.name === "ADMIN" && (
+                                <Link href="/admin/categories" className="text-sm font-medium text-slate-600 transition hover:text-slate-950">
+                                    Admin
+                                </Link>
+                            )}
+                        </>
                     )}
                 </div>
 

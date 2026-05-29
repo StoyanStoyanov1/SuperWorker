@@ -10,7 +10,10 @@ export const ENDPOINTS = {
         addresses: "/users/me/addresses",
     },
     products: "/products",
-    categories: "/categories/all",
+    categories: {
+        all: "/categories/all",
+        base: "/categories",
+    },
     cart: {
         base: "/cart",
         items: "/cart/items",
